@@ -1,0 +1,140 @@
+mql5
+//+------------------------------------------------------------------+
+//|                                              Master Oscillators |
+//|                                     © 2021 Forex Robot Easy Team |
+//|                                               forexroboteasy.com |
+//+------------------------------------------------------------------+
+
+// Input parameters
+input int RSI_Period = 14;
+input double RSI_Overbought = 70;
+input double RSI_Oversold = 30;
+input int CCI_Period = 14;
+input double CCI_Overbought = 100;
+input double CCI_Oversold = -100;
+input int Stochastic_K_Period = 14;
+input int Stochastic_D_Period = 3;
+input int Stochastic_Slowing = 3;
+input double Stochastic_Overbought = 80;
+input double Stochastic_Oversold = 20;
+input int MA_Period = 20;
+input ENUM_MA_METHOD MA_Method = MODE_SMA;
+
+// Global variables
+bool MA_Filter;
+double Lot_Size;
+bool Kelly_Criterion;
+double Risk_Percentage;
+double Stop_Loss;
+double Take_Profit;
+
+//+------------------------------------------------------------------+
+//| Custom indicator functions                                        |
+//+------------------------------------------------------------------+
+double RSI()
+{
+    // Calculate RSI value
+    return iRSI(Symbol(), PERIOD_CURRENT, RSI_Period, PRICE_CLOSE, 0);
+}
+
+double CCI()
+{
+    // Calculate CCI value
+    return iCCI(Symbol(), PERIOD_CURRENT, CCI_Period, PRICE_TYPICAL, 0);
+}
+
+double Stochastic()
+{
+    // Calculate Stochastic value
+    return iStochastic(Symbol(), PERIOD_CURRENT, Stochastic_K_Period, Stochastic_D_Period, Stochastic_Slowing, MODE_SMA, 0, MODE_MAIN, 0);
+}
+
+//+------------------------------------------------------------------+
+//| Trading functions                                                |
+//+------------------------------------------------------------------+
+void OpenTrade()
+{
+    // Perform necessary actions to open a trade
+    // ...
+}
+
+void CloseTrade()
+{
+    // Perform necessary actions to close a trade
+    // ...
+}
+
+//+------------------------------------------------------------------+
+//| Calculation functions                                            |
+//+------------------------------------------------------------------+
+double CalculateLotSize()
+{
+    // Calculate lot size based on user-defined criteria
+    // ...
+    return Lot_Size;
+}
+
+double CalculateStopLoss()
+{
+    // Calculate stop loss level based on user-defined criteria
+    // ...
+    return Stop_Loss;
+}
+
+double CalculateTakeProfit()
+{
+    // Calculate take profit level based on user-defined criteria
+    // ...
+    return Take_Profit;
+}
+
+//+------------------------------------------------------------------+
+//| Main program                                                     |
+//+------------------------------------------------------------------+
+void OnTick()
+{
+    // Check if MA filter is enabled
+    if (MA_Filter)
+    {
+        // Calculate moving average
+        double MA = iMA(Symbol(), PERIOD_CURRENT, MA_Period, 0, MA_Method, PRICE_CLOSE, 0);
+
+        // Perform trading logic based on MA filter
+        if (Bid > MA)
+        {
+            // Check RSI signal
+            if (RSI() < RSI_Oversold)
+            {
+                // Open trade using calculated parameters
+                OpenTrade();
+            }
+        }
+        else
+        {
+            // Check CCI signal
+            if (CCI() > CCI_Overbought)
+            {
+                // Open trade using calculated parameters
+                OpenTrade();
+            }
+        }
+    }
+    else
+    {
+        // Check RSI signal
+        if (RSI() < RSI_Oversold)
+        {
+            // Open trade using calculated parameters
+            OpenTrade();
+        }
+    }
+
+    // Close trades based on user-defined criteria
+    // ...
+}
+
+void OnDeinit(const int reason)
+{
+    // Perform necessary cleanup actions
+    // ...
+}
